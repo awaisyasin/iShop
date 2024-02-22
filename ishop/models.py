@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 from accounts.models import CustomUser
 
@@ -40,3 +41,18 @@ class Product(models.Model):
 class ProductImage(models.Model):
     image = models.ImageField(upload_to='product_images/')
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='product_images')
+
+
+class FeaturedProduct(models.Model):
+    product = models.OneToOneField(Product, on_delete=models.CASCADE, related_name='is_featured')
+    shop = models.ForeignKey(Shop, on_delete=models.CASCADE, related_name='featured_products')
+    start_date = models.DateTimeField(auto_now_add=True)
+    end_date = models.DateTimeField(default=lambda: timezone.now() + timezone.timedelta(days=7))
+
+    @property
+    def is_active(self):
+        now = timezone.now()
+        return self.start_date <= now < self.end_date
+
+    def __str__(self):
+        return self.is_active
