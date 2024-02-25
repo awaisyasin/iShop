@@ -5,7 +5,7 @@ from django.utils.translation import gettext_lazy as _
 # Create your models here.
 
 class CustomUser(AbstractUser):
-    profile_picture = models.ImageField(upload_to='profile_pictures/', null=True, blank=True)
+    profile_picture = models.ImageField(upload_to='profiles', null=True, blank=True)
     address = models.CharField(max_length=255, null=True, blank=True)
     email_verification_token = models.CharField(max_length=200, null=True, blank=True)
     is_email_verified = models.BooleanField(default=False)
