@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from django.core.validators import MinValueValidator
 
 from accounts.models import CustomUser
 
@@ -16,11 +17,6 @@ class Shop(models.Model):
     website = models.URLField(null=True, blank=True, help_text='Enter the URL starting with http:// or https://')
     owner = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='shop')
 
-    # rating = models.FloatField()
-    # featured_products = models.ForeignKey(Product)
-    # reviews = models.ForeignKey(Review))
-    # tags = models.ManyToManyField(Tag)
-
 
 class Category(models.Model):
     name = models.CharField(max_length=255)
@@ -30,7 +26,7 @@ class Category(models.Model):
 class Product(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField(max_length=1000)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
+    price = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(1),])
     quantity = models.PositiveIntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -44,10 +40,10 @@ class ProductImage(models.Model):
 
 
 class FeaturedProduct(models.Model):
-    product = models.OneToOneField(Product, on_delete=models.CASCADE, related_name='is_featured')
-    shop = models.ForeignKey(Shop, on_delete=models.CASCADE, related_name='featured_products')
     start_date = models.DateTimeField(auto_now_add=True)
     end_date = models.DateTimeField(default=lambda: timezone.now() + timezone.timedelta(days=7))
+    product = models.OneToOneField(Product, on_delete=models.CASCADE, related_name='is_featured')
+    shop = models.ForeignKey(Shop, on_delete=models.CASCADE, related_name='featured_products')
 
     @property
     def is_active(self):
@@ -56,3 +52,18 @@ class FeaturedProduct(models.Model):
 
     def __str__(self):
         return self.is_active
+
+
+class Review(models.Model):
+    RATING_CHOICES = [
+        (1, '1 star'),
+        (2, '2 star'),
+        (3, '3 star'),
+        (4, '4 star'),
+        (5, '5 star'),
+    ]
+    rating = models.IntegerField(choices=RATING_CHOICES)
+    comment = models.TextField(max_length=500, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='reviews')
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='reviews')
