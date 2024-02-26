@@ -1,0 +1,18 @@
+.messages {
+    position: fixed;
+    left: 50%;
+    top: 0;
+    transform: translateX(-50%);
+    list-style-type: none;
+    z-index: 100;
+}
+
+.message {
+    padding: 10px 20px;
+    background-color: rgba(0, 0, 0, 0.3);
+    color: #fff;
+    color: red;
+}
+
+.error {
+}

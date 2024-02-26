@@ -3,6 +3,7 @@ from django.core.mail import send_mail
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login
+from django.contrib import messages
 import uuid
 
 from .forms import CustomUserForm
@@ -52,10 +53,15 @@ def login_view(request):
             if user.is_email_verified:
                 login(request, user)
                 return redirect('accounts:register')
-
+            else:
+                messages.error(request, 'Please verify your email before logging in.')
+                return redirect('accounts:login')
+        else:
+            messages.error(request, 'Invalid username or password.')
+            return redirect('accounts:login')
     else:
         form = AuthenticationForm()
-        return render(request, 'accounts/login.html', {'form': form})
+    return render(request, 'accounts/login.html', {'form': form})
 
 # from django.contrib import messages
 

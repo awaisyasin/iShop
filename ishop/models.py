@@ -38,10 +38,12 @@ class ProductImage(models.Model):
     image = models.ImageField(upload_to='products')
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='product_images')
 
+def default_end_date():
+        return timezone.now() + timezone.timedelta(days=3)
 
 class FeaturedProduct(models.Model):
     start_date = models.DateTimeField(auto_now_add=True)
-    end_date = models.DateTimeField(default=lambda: timezone.now() + timezone.timedelta(days=7))
+    end_date = models.DateTimeField(default=default_end_date)
     product = models.OneToOneField(Product, on_delete=models.CASCADE, related_name='is_featured')
     shop = models.ForeignKey(Shop, on_delete=models.CASCADE, related_name='featured_products')
 
