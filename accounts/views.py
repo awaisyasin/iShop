@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.core.mail import send_mail
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth import login
+from django.contrib.auth import login, logout
 from django.contrib import messages
 import uuid
 
@@ -12,6 +12,10 @@ from .models import CustomUser
 # Create your views here.
 
 def register_view(request):
+    if request.user.is_authenticated:
+        messages.warning(request, 'User is already logged in.')
+        messages.info(request, 'User must be logged out to login or create account.')
+        return redirect('ishop:home')
     if request.method == 'POST':
         form = CustomUserForm(request.POST, request.FILES)
         if form.is_valid():
@@ -52,6 +56,10 @@ def verify_email_view(request, token):
 
 
 def login_view(request):
+    if request.user.is_authenticated:
+        messages.warning(request, 'User is already logged in.')
+        messages.info(request, 'User must be logged out to login or create account.')
+        return redirect('ishop:home')
     if request.method == 'POST':
         form = AuthenticationForm(data=request.POST)
         if form.is_valid():
@@ -68,3 +76,11 @@ def login_view(request):
     else:
         form = AuthenticationForm()
     return render(request, 'accounts/login.html', {'form': form})
+
+
+def logout_view(request):
+    try:
+        logout(request)
+    except Exception as e:
+        messages.error(request, 'User is already logged out.')
+    return redirect('accounts:login')
