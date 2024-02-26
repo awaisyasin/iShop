@@ -27,12 +27,18 @@ def register_view(request):
             verification_link = f'http://{current_site}/accounts/verify-email/{token}/'
             message = f'Click the following link to verify your email:\n{verification_link}'
 
-            send_mail(subject, message, from_email, recipient_list,)
-
-            user.save()
-            return redirect('accounts:login')
-
-    form = CustomUserForm()
+            try:
+                send_mail(subject, message, from_email, recipient_list,)
+                user.save()
+                return redirect('accounts:login')
+            except Exception as e:
+                messages.error(request, 'An error occurred while sending the verification email. Please try again later.')
+                return redirect('accounts:register')
+        else:
+            messages.error(request, 'Invalid form submission. Please correct the errors below.')
+            return render(request, 'accounts/register.html', {'form': form})
+    else:
+        form = CustomUserForm()
     return render(request, 'accounts/register.html', {'form': form})
 
 
@@ -52,36 +58,13 @@ def login_view(request):
             user = form.get_user()
             if user.is_email_verified:
                 login(request, user)
-                return redirect('accounts:register')
+                return redirect('ishop:home')
             else:
                 messages.error(request, 'Please verify your email before logging in.')
-                return redirect('accounts:login')
+                return render(request, 'accounts/login.html', {'form': form})
         else:
             messages.error(request, 'Invalid username or password.')
-            return redirect('accounts:login')
+            return render(request, 'accounts/login.html', {'form': form})
     else:
         form = AuthenticationForm()
     return render(request, 'accounts/login.html', {'form': form})
-
-# from django.contrib import messages
-
-# def login_view(request):
-#     if request.method == 'POST':
-#         form = AuthenticationForm(data=request.POST)
-#         try:
-#             if form.is_valid():
-#                 user = form.get_user()
-#                 if user.is_email_verified:
-#                     login(request, user)
-#                     return redirect('accounts:register')
-#                 else:
-#                     raise ValueError('Email not verified')
-#             else:
-#                 raise ValueError('Invalid form data')
-#         except ValueError as e:
-#             messages.error(request, str(e))
-
-#     else:
-#         form = AuthenticationForm()
-
-#     return render(request, 'accounts/login.html', {'form': form})
