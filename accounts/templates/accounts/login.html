@@ -1,8 +1,25 @@
 {% extends "base.html" %}
+{% load static %}
+
+
 {% block content %}
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Login</button>
-</form>
+    <link rel="stylesheet" href="{% static 'accounts/css/login.css' %}">
+    <link rel="stylesheet" href="{% static 'css/buttons.css' %}">
+    <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="form-group">
+                {{ field.label_tag }}<br>
+                {{ field }}
+            </div>
+        {% if field.errors %}
+            <ul>
+                {% for error in field.errors %}
+                    <li class="error">{{ erorr }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        {% endfor %}
+        <button type="submit" class="btn btn-primary">Login</button>
+    </form>
 {% endblock content %}

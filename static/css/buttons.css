@@ -1,0 +1,22 @@
+.btn {
+    padding: 6px 12px;
+    margin: 0;
+    cursor: pointer;
+    border: none;
+    font-size: 1.2rem;
+    border-radius: 4px;
+}
+
+.btn:focus {
+    outline: none;
+}
+
+.btn:active {
+    transform: scale(0.98);
+    transition: transform 0.2s ease-in-out;
+}
+
+.btn-primary {
+    background-color: #1a5f85;
+    color: #74bbe3;
+}

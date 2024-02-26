@@ -1,8 +1,28 @@
 {% extends "base.html" %}
+{% load static %}
+
+
 {% block content %}
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Register</button>
-</form>
+    <link rel="stylesheet" href="{% static 'accounts/css/register.css' %}">
+    <link rel="stylesheet" href="{% static 'css/buttons.css' %}">
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="form-group">
+                {{ field.label_tag }}<br>
+                {{ field }}<br>
+                {% if field.name == 'password1' %}
+                    {{ field.help_text }}
+                {% endif %}
+            </div>
+            {% if field.errors %}
+                <ul>
+                    {% for error in field.errors %}
+                        <li class="error">{{ erorr }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endfor %}
+        <button type="submit" class="btn btn-primary">Register</button>
+    </form>
 {% endblock content %}
