@@ -8,7 +8,7 @@ from accounts.models import CustomUser
 
 class Shop(models.Model):
     name = models.CharField(max_length=255)
-    username = models.CharField(max_length=255, unique=True)
+    username = models.CharField(max_length=255, unique=True, help_text='Enter a unique username for the shop. This will be used for identification.')
     description = models.TextField(max_length=1000)
     created_at = models.DateTimeField(auto_now_add=True)
     logo = models.ImageField(upload_to='logos', null=True, blank=True)

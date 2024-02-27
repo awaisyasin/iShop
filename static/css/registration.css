@@ -1,0 +1,33 @@
+form {
+    background-color: #74bbe3;
+    padding: 30px 60px;
+    border-radius: 10px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: inline-block;
+    margin-bottom: 2px;
+    color: #13445f;
+}
+
+.form-group input {
+    border: none;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 1.2rem;
+    font-family: "Poppins", sans-serif;
+    color: #13445f;
+    width: 100%;
+}
+
+.form-group input:focus {
+    outline: none;
+}
+
+button.btn {
+    width: 100%;
+}
